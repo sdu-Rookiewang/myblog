@@ -24,7 +24,8 @@ baseurl: /myblog/
 #
 
 # 你的博客logo图片URL，建议尺寸不超过300px × 300px
-avatar: https://raw.githubusercontent.com/FromEndWorld/LOFFER/master/images/logo.png
+avatar: https://img0.baidu.com/it/u=1952959901,2911584839&fm=253&fmt=auto&app=138&f=JPEG?w=406&h=263
+#https://raw.githubusercontent.com/FromEndWorld/LOFFER/master/images/logo.png
 
 # 你的favicon（出现在浏览器tab上）图片URL，建议使用较小(64px × 64px)的图片
 favicon: https://raw.githubusercontent.com/FromEndWorld/LOFFER/master/images/favicon.png
@@ -36,13 +37,13 @@ navigation:
     url: /
   - name: 关于
     url: /about
-  - name: 归档
+  - name: 文档
     url: /archive
   - name: 标签
     url: /tags
 
 # 每页的文章数
-paginate: 8
+paginate: 20
 
 # 文章简介的区分标记
 excerpt_separator: <!-- more -->
@@ -55,7 +56,7 @@ footer-links:
   email: #youremailaddress@mail.com
   facebook: #https://www.facebook.com/<>
   flickr: #https://www.flickr.com/<>
-  github: FromEndWorld/loffer #https://github.com/<>
+  github: sdu-Rookiewang #https://github.com/<>
   instagram: #https://instagram.com/<>
   linkedin: #https://www.linkedin.com/in/<>
   pinterest: #https://www.pinterest.com/<>
@@ -66,14 +67,14 @@ footer-links:
   youtube: # channel/<your_long_string> or user/<user-name>
 
 # 站点页脚的文字
-footer-text: Copyright (c) 2019 来自中世界
+footer-text: Copyright (c) 2023 made in China
 
 #
 # 评论，注意，请不要同时添加多种不同的评论区
 #
 
 # 输入Disqus shortname，即可添加评论区，请查阅文档，设置自己的disqus站点，不要继续使用我的站点loffer
-disqus: loffer #shortname
+disqus: waiting for a while #shortname
 
 # 输入Gitalk相关设定，即可添加评论区，具体请看教程
 gitalk:
