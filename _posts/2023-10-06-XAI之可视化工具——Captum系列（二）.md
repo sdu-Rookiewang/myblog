@@ -1,5 +1,4 @@
 ---
-
 layout: post
 toc: true
 title: XAI之可视化工具——Captum系列（二）
@@ -7,12 +6,8 @@ date: 2023-10-06
 Author: HackMagic
 categories: Computer Science
 tags: [XAI, document]
-
 comments: true 
-
 ---
-
-
 
 [TOC]
 
