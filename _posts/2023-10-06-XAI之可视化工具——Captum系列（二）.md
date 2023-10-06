@@ -9,8 +9,6 @@ tags: [XAI, document]
 comments: true 
 ---
 
-[TOC]
-
 ## 前言
 
 ```python
