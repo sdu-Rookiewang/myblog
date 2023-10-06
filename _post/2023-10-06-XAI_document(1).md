@@ -1,11 +1,11 @@
 ```markdown
 ---
 layout: post
-title: LOFFER文档
-date: 2019-06-02
-Author: 来自中世界
-categories: 
-tags: [sample, document]
+title: XAI之可视化工具——Captum系列（二）
+date: 2023-10-06
+Author: HackMagic
+categories: computer science
+tags: [xai, document]
 comments: true
 --- 
 ```
