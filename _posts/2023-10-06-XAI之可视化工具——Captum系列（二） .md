@@ -1,13 +1,15 @@
+```
 ---
 layout: post
-toc: true
 title: XAI之可视化工具——Captum系列（二）
 date: 2023-10-06
 Author: HackMagic
 categories: Computer Science
-tags: [XAI]
+tags: [XAI, document]
 comments: true 
----
+toc: true
+--- 
+```
 
 本节将侧重于展示如何使用Captum实现本地可解释模型（LIME）来帮助理解神经网络模型。本节内容分为图像分类部分（可展示的高级界面Lime类），以及文本分类部分（可定制的低级界面LimeBase）。
 
@@ -22,8 +24,6 @@ from captum._utils.models.linear_model import SkLearnLinearRegression, SkLearnLa
 import os
 import json
 ```
-
-
 
 ## 一、LIME检查图像分类
 
@@ -51,7 +51,7 @@ resnet = resnet.eval()
 该模型预测给定示例图像的ImageNet-1k标签。为了更好地呈现结果，我们还加载了标签索引和文本的映射。
 
 ```python
-!wget -P $HOME/.torch/models https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json
+!wget -P $HOME/.torch/models https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.
 ```
 
 ```python
@@ -67,7 +67,7 @@ voc_ds = VOCSegmentation(
     './VOC',
     year='2012',
     image_set='train',
-    download=False,
+    download=False,  # 这里第一次下载数据需要将download改为True
     transform=T.Compose([
         T.ToTensor(),
         T.Normalize(
@@ -96,40 +96,42 @@ def show_image(ind):
         ax[i].axis('off')
 
 show_image(sample_idx)
+plt.show()
 ```
 
-
+<img src="https://github.com/sdu-Rookiewang/myblog/blob/master/images/2023-10-06/figure1.png?raw=true" style="zoom:50%;" />
 
 ### 2.基线分类
 
 我们可以检查我们的模型与上述示例的效果如何。原始的Resnet只提供标签的logits，因此我们将添加一个softmax层，将它们归一化为概率。
 
 ```python
-sample_idx = 439
+img, seg_mask = voc_ds[sample_idx]  # tensors of shape (channel, hight, width)
 
-def show_image(ind): 
-    fig, ax = plt.subplots(1, 2, figsize=[6.4 * 2, 4.8])
-    for i, (name, source) in enumerate(zip(['Image', 'Mask'], [voc_ds.images, voc_ds.masks])):
-        ax[i].imshow(Image.open(source[ind]));
-        ax[i].set_title(f"{name} {ind}")
-        ax[i].axis('off')
-
-show_image(sample_idx)
+outputs = resnet(img.unsqueeze(0))
+output_probs = F.softmax(outputs, dim=1).squeeze(0)
 ```
 
 然后，我们展示前5个预测标签来验证结果。
 
 ```python
-sample_idx = 439
+def print_result(probs, topk=1):
+    probs, label_indices = torch.topk(probs, topk)
+    probs = probs.tolist()
+    label_indices = label_indices.tolist()
+    for prob, idx in zip(probs, label_indices):
+        label = idx_to_labels[str(idx)]
+        print(f'{label} ({idx}):', round(prob, 4))
+        
+print_result(output_probs, topk=5)
+```
 
-def show_image(ind): 
-    fig, ax = plt.subplots(1, 2, figsize=[6.4 * 2, 4.8])
-    for i, (name, source) in enumerate(zip(['Image', 'Mask'], [voc_ds.images, voc_ds.masks])):
-        ax[i].imshow(Image.open(source[ind]));
-        ax[i].set_title(f"{name} {ind}")
-        ax[i].axis('off')
-
-show_image(sample_idx)
+```python
+television (851): 0.083
+screen (782): 0.0741
+monitor (664): 0.0619
+laptop (620): 0.0421
+ashcan (412): 0.03
 ```
 
 正如我们所看到的，结果相当合理。
@@ -156,7 +158,12 @@ for i, seg_id in enumerate(seg_ids):
 print('Feature mask IDs:', feature_mask.unique().tolist())
 ```
 
-现在是时候配置我们的Lime算法了。从本质上讲，Lime训练了一个可解释的代理模型来模拟目标模型的预测。因此，建立一个适当的可解释模型是Lime中最关键的一步。幸运的是，Captum提供了许多最常见的可解释模型来节省精力。我们将演示线性回归和线性套索的用法。另一个重要因素是相似性函数。由于Lime旨在解释一个示例的局部行为，它将根据训练样本的相似距离重新加权。默认情况下，Captum的Lime在conzine距离之上使用指数内核。我们将改为欧几里得距离，这在视觉上更受欢迎。
+```python
+Segmentation IDs: [0, 9, 20, 255]
+Feature mask IDs: [0, 1, 2, 3]
+```
+
+现在是时候配置我们的Lime算法了。从本质上讲，Lime训练了一个可解释的代理模型来模拟目标模型的预测。因此，建立一个适当的可解释模型是Lime中最关键的一步。幸运的是，Captum提供了许多最常见的可解释模型来节省精力。我们将演示线性回归和岭回归的用法。另一个重要因素是相似性函数。由于Lime旨在解释一个示例的局部行为，它将根据训练样本的相似距离重新加权。默认情况下，Captum的Lime在conzine距离之上使用指数内核。我们将改为欧几里得距离，这在视觉上更受欢迎。
 
 ```python
 exp_eucl_distance = get_exp_kernel_similarity_function('euclidean', kernel_width=1000)
@@ -186,6 +193,10 @@ attrs = lr_lime.attribute(
 print('Attribution range:', attrs.min().item(), 'to', attrs.max().item())
 ```
 
+```python
+Attribution range: -0.31529250741004944 to 2.7626588344573975
+```
+
 现在，让我们使用Captum的可视化工具来查看归因热图。
 
 ```python
@@ -198,7 +209,10 @@ def show_attr(attr_map):
     )
     
 show_attr(attrs)
+plt.show()
 ```
+
+<img src="https://github.com/sdu-Rookiewang/myblog/blob/master/images/2023-10-06/figure2.png?raw=true" style="zoom:50%;" />
 
 结果看起来不错：电视部分确实与预测表现出最强的正相关性，而椅子的影响相对较小，边框略有负面贡献。
 
@@ -231,7 +245,14 @@ attrs = lasso_lime.attribute(
 
 print('Attribution range:', attrs.min().item(), 'to', attrs.max().item())
 show_attr(attrs)
+plt.show()
 ```
+
+```python
+Attribution range: -0.04702482745051384 to 2.532829523086548
+```
+
+<img src="https://github.com/sdu-Rookiewang/myblog/blob/master/images/2023-10-06/figure3.png?raw=true" style="zoom:50%;" />
 
 正如我们所看到的，新的归因结果在Lasso的帮助下移除了椅子和边框。
 
@@ -242,6 +263,10 @@ alter_label_idx = 765
 
 alter_prob = output_probs[alter_label_idx].item()
 print(f'{idx_to_labels[str(alter_label_idx)]} ({alter_label_idx}):', round(alter_prob, 4))
+```
+
+```python
+rocking_chair (765): 0.0048
 ```
 
 然后，我们将用我们的Lasso Lime重做归因。
@@ -259,9 +284,16 @@ attrs = lasso_lime.attribute(
 
 print('Attribution range:', attrs.min().item(), 'to', attrs.max().item())
 show_attr(attrs)
+plt.show()
 ```
 
-如热图所示，我们的ResNet确实对椅子部分提出了正确的信念。然而，它受到前景电视部分的阻碍。这也可以解释为什么模特对椅子不如电视有信心。
+```python
+Attribution range: -0.16570651531219482 to 1.4231914281845093
+```
+
+<img src="https://github.com/sdu-Rookiewang/myblog/blob/master/images/2023-10-06/figure4.png?raw=true" style="zoom:50%;" />
+
+如热图所示，我们的ResNet确实对椅子部分提出了正确的判断。然而，它受到前景电视部分的阻碍。这也可以解释为什么模型对椅子不如电视有信心。
 
 ### 4.了解采样过程
 
@@ -277,6 +309,10 @@ for _ in range(SAMPLE_INDEX + 1):
     sample_interp_inp = next(pertubed_genertator)
     
 print('Perturbed interpretable sample:', sample_interp_inp)
+```
+
+```python
+Perturbed interpretable sample: tensor([[1, 1, 0, 1]])
 ```
 
 我们的输入样本`[1, 1, 0, 1]`意味着第三段（电视）不存在，而其他三个段停留。
@@ -302,6 +338,8 @@ plt.axis('off')
 plt.show()
 ```
 
+<img src="https://github.com/sdu-Rookiewang/myblog/blob/master/images/2023-10-06/figure5.png?raw=true" style="zoom:50%;" />
+
 如上所示，与原始图像相比，缺席的特征，即电视部分，在扰动的图像中被掩盖，而其他当前特征保持不变。通过扰动的图像，Lime能够找到模型的预测。让我们仍然使用“电视”作为我们的归因目标，因此扰动样本的标签是模型在“电视”上预测的值。出于好奇，我们还可以检查模型的预测如何随着扰动而变化。
 
 ```python
@@ -315,6 +353,17 @@ print_result(perturbed_output_probs, topk=5)
 print(f'\ntelevision ({label_idx.item()}):', perturbed_output_probs[label_idx].item())
 ```
 
+```python
+Label of the perturbed sample as Television: tensor(3.2104)
+Probabilities of the perturbed image
+jigsaw_puzzle (611): 0.094
+chest (492): 0.0377
+laptop (620): 0.0338
+birdhouse (448): 0.0328
+ashcan (412): 0.0315
+television (851): 0.0065061962231993675
+```
+
 合理的是，我们的ImageNet不再对将图像归类为电视有信心。
 
 最后，由于Lime专注于局部可解释性，它将计算扰动图像和原始图像之间的相似性，以重新权衡该数据点的损失。请注意，计算基于输入空间而不是可解释空间。这一步只是将两个图像张量传递到给定的similarity_func参数中，在我们的案例中，这是欧几里得距离的指数内核。
@@ -322,6 +371,10 @@ print(f'\ntelevision ({label_idx.item()}):', perturbed_output_probs[label_idx].i
 ```python
 sample_similarity = exp_eucl_distance(img.unsqueeze(0), pertubed_img, None)
 print('Sample similarity:', sample_similarity)
+```
+
+```python
+Sample similarity: 0.9705053132290518
 ```
 
 这基本上就是Lime如何创建`sample_interp_inp`、`sample_label`和`sample_similarity`的单个训练数据点。通过重复此过程`n_samples`次数，它收集了一个数据集来训练可解释的模型。
