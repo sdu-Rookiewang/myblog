@@ -51,7 +51,7 @@ resnet = resnet.eval()
 该模型预测给定示例图像的ImageNet-1k标签。为了更好地呈现结果，我们还加载了标签索引和文本的映射。
 
 ```python
-!wget -P $HOME/.torch/models https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.
+!wget -P $HOME/.torch/models https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json
 ```
 
 ```python
