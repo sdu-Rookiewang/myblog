@@ -9,9 +9,7 @@ tags: [XAI]
 comments: true 
 ---
 
-
-
-## 前言
+本节将侧重于展示如何使用Captum实现本地可解释模型（LIME）来帮助理解神经网络模型。本节内容分为图像分类部分（可展示的高级界面`Lime`类），以及文本分类部分（可定制的低级界面LimeBase）。
 
 ```python
 import torch
