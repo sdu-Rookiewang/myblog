@@ -21,7 +21,7 @@ Captum是PyTorch的模型可解释性和理解库。Captum在拉丁语中的意�
 
 Captum帮助ML研究人员更容易实现可解释性算法，该算法可以与PyTorch模型交互。Captum还允许研究人员根据图书馆中可用的其他现有算法快速将他们的工作进行基准测试。
 
-![图1](https://github.com/sdu-Rookiewang/myblog/blob/master/images/Captum_Attribution_Algos.png?raw=true)
+<img src="https://github.com/sdu-Rookiewang/myblog/blob/master/images/Captum_Attribution_Algos.png?raw=true" style="zoom:50%;" />
 
 Captum的主要受众是模型开发人员，他们希望改进他们的模型，并了解哪些功能很重要，可解释性研究人员专注于识别可以更好地解释许多类型模型的算法。
 
@@ -338,7 +338,7 @@ python -m captum.insights.example
 
 并导航到输出中指定的URL。
 
-![图2](https://github.com/sdu-Rookiewang/myblog/blob/master/images/captum_insights_screenshot.png?raw=true)
+<img src="https://github.com/sdu-Rookiewang/myblog/blob/master/images/captum_insights_screenshot.png?raw=true" style="zoom:50%;" />
 
 要构建Insights，您需要[Node ](https://nodejs.org/en/)>= 8.x和[Yarn ](https://yarnpkg.com/en/)>= 1.5。
 
