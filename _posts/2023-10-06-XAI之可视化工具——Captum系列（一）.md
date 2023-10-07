@@ -11,7 +11,7 @@ comments: true
 
 ---
 
-Captum是PyTorch的模型可解释性和理解库。Captum在拉丁语中的意思是解析，并包含PyTorch模型的集成梯度、显著性映射、smoothgrad、vargrad等的通用实现。它可以快速集成于深度学习特定库（如torchvision、torchtext等）构建的模型。
+Captum是PyTorch的模型可解释性和理解库。Captum在拉丁语中的意思是解析，并包含PyTorch模型的integrated gradients、saliency maps、smoothgrad、vargrad等的通用实现。它可以快速集成于深度学习特定库（如torchvision、torchtext等）构建的模型。
 
 ## 一、什么是Captum工具
 
