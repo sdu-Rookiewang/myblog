@@ -1,15 +1,15 @@
-```
 ---
+
 layout: post
-title: XAI之可视化工具——Captum系列（二）
+toc: true
+title: XAI之可视化工具——Captum系列（一）
 date: 2023-10-06
 Author: HackMagic
 categories: Computer Science
-tags: [XAI, document]
+tags: [XAI]
 comments: true 
-toc: true
---- 
-```
+
+---
 
 本节将侧重于展示如何使用Captum实现本地可解释模型（LIME）来帮助理解神经网络模型。本节内容分为图像分类部分（可展示的高级界面Lime类），以及文本分类部分（可定制的低级界面LimeBase）。
 
